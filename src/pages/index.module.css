@@ -55,6 +55,12 @@
   text-align: center;
 }
 
+.landImg {
+  width: 132px;
+  height: 132px;
+  text-align: center;
+}
+
 .mintText {
   margin-top: 55px;
   display: flex;
@@ -80,6 +86,14 @@
   font-size: 18px;
   line-height: 24px;
   letter-spacing: 0.2em;
+}
+
+.mintRemindTitle {
+  margin-top: 58px;
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: 0.2em;
+  text-align: center;
 }
 
 .inputs {
@@ -109,17 +123,6 @@
   padding-right: 8px;
 }
 
-@media (max-width: 512px) {
-  .inputs {
-    flex-direction: column;
-  }
-  .inputContent {
-    flex: auto;
-    margin-bottom: 20px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-}
 
 .inputPrefix {
   display: flex;
@@ -163,8 +166,8 @@
 }
 
 .end {
-  margin-top: 30px;
-  margin-bottom: 125px;
+  margin-top: 70px;
+  margin-bottom: 100px;
   font-size: 12px;
   line-height: 24px;
   text-align: center;
@@ -193,4 +196,26 @@
   text-align: center;
   font-size: 64px;
   font-weight: bold;
+}
+
+
+@media (max-width: 750px) {
+  .inputs {
+    flex-direction: column;
+  }
+  .inputContent {
+    flex: auto;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .countDownContent {
+    flex-direction: column;
+  }
+  .countDown {
+    flex: auto;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }

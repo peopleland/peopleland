@@ -25,6 +25,7 @@
   cursor: pointer;
 }
 
+
 .connectText {
   padding: 5px 16px;
   cursor: pointer;
@@ -33,4 +34,12 @@
 .testNetwork {
   color: #fff;
   display: inline-block;
+}
+
+
+@media (max-width: 750px) {
+  .connect {
+    display: none;
+    position: unset;
+  }
 }
