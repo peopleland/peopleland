@@ -103,9 +103,30 @@
   justify-content: center;
 }
 
+.inviteAddressInput {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
 .inputWrapper {
   position: relative;
   width: 184px;
+  min-width: 0;
+  padding: 4px 11px;
+  color: #000000d9;
+  font-size: 14px;
+  line-height: 1.5715;
+  background-color: #CFAF8B;
+  background-image: none;
+  transition: all .3s;
+  display: inline-flex;
+}
+
+.inviteAddressInputWrapper {
+  position: relative;
+  width: 408px;
   min-width: 0;
   padding: 4px 11px;
   color: #000000d9;
@@ -123,6 +144,11 @@
   padding-right: 8px;
 }
 
+.inviteAddressInputContent {
+  flex: 0 0 408px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
 
 .inputPrefix {
   display: flex;
@@ -135,6 +161,7 @@
 }
 
 .input {
+  width: 100%;
   padding: 0;
   border: none;
   outline: none;
@@ -146,7 +173,6 @@
   display: flex;
   flex-direction: row;
   justify-content: center;
-
 }
 
 .button > a {
@@ -198,6 +224,23 @@
   font-weight: bold;
 }
 
+.inputDisabled {
+  color: #00000040;
+  border-color: #d9d9d9;
+  background: #f5f5f5 !important;
+  box-shadow: none;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+.buttonDisabled {
+  color: #00000040;
+  border-color: #d9d9d9;
+  background: #f5f5f5 !important;
+  text-shadow: none;
+  box-shadow: none;
+  cursor: not-allowed !important;
+}
 
 @media (max-width: 750px) {
   .inputs {

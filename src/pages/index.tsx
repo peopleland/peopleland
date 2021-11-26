@@ -1,20 +1,20 @@
 import * as React from "react"
 import Header from "../components/header"
 import * as styles from "./index.module.css"
-import Guide from "../assets/guide.png"
-import Land from "../assets/land.jpeg"
+import Guide from "../assets/guide.jpeg"
+import Land from "../assets/land.png"
 import detectEthereumProvider from "@metamask/detect-provider";
-// import {Contract} from "../app/contract";
+import {Contract} from "../app/contract";
 import prodWhiteAddress from "../assets/prod_address_sign_info.json";
 import moment from "moment";
 import {BeginMintDatetime} from "../utils/global";
 
-// markup
 const IndexPage = () => {
   const [metamaskProvider, setMetamaskProvider] = React.useState(null);
   const [network, setNetwork] = React.useState<string>(null);
   const [accounts, setAccounts] = React.useState<string[]>([]);
   const [isGived, setIsGived] = React.useState<boolean>(false);
+  const [landCount, setLandCount] = React.useState<number>(0);
   const [currentMoment, setCurrentMoment] = React.useState(moment());
   const [inWhiteList, setInWhiteList] = React.useState(false);
 
@@ -31,10 +31,10 @@ const IndexPage = () => {
     })
   }, [])
 
-  // const contract = React.useMemo(() => {
-  //   if (!network || !metamaskProvider) return null
-  //   return new Contract(network, metamaskProvider)
-  // },[network, metamaskProvider])
+  const contract = React.useMemo(() => {
+    if (!network || !metamaskProvider) return null
+    return new Contract(network, metamaskProvider)
+  },[network, metamaskProvider])
 
   React.useEffect(() => {
     if (metamaskProvider) {
@@ -46,7 +46,6 @@ const IndexPage = () => {
       });
     }
   }, [metamaskProvider])
-
 
   const connectMetamask = React.useCallback(() => {
     if (!metamaskProvider) {
@@ -61,16 +60,13 @@ const IndexPage = () => {
     })
   }, [metamaskProvider])
 
-  // React.useEffect(() => {
-  //   if (!accounts || accounts.length < 1 || !contract) return
-  //   const account = accounts[0]
-  //   contract.getGivedLand(account).then((ret) => {
-  //     setIsGived(ret)
-  //     if (!ret) {
-  //
-  //     }
-  //   })
-  // }, [accounts])
+  React.useEffect(() => {
+    if (!accounts || accounts.length < 1 || !contract) return
+    const account = accounts[0]
+    contract.getGivedLand(account).then((ret) => {
+      setIsGived(ret)
+    })
+  }, [accounts])
 
   console.log(network, accounts)
 
@@ -79,6 +75,21 @@ const IndexPage = () => {
     const account = accounts[0]
     setInWhiteList(!!prodWhiteAddress[account])
   }, [accounts])
+
+  const canMint = React.useMemo(() => {
+    return !isGived && inWhiteList;
+  }, [isGived, inWhiteList])
+
+  React.useEffect(() => {
+    if (!isGived || !accounts || accounts.length < 1) return
+    contract.getMintLandCount(accounts[0]).then((v) => {
+      setLandCount(v)
+    })
+  }, [isGived, accounts, contract])
+
+  const canInvite = React.useMemo(() => {
+    return isGived && landCount < 2;
+  }, [isGived, landCount])
 
   const mintText = React.useMemo(() => {
     if (BeginMintDatetime.isSameOrBefore(currentMoment)) {
@@ -92,20 +103,22 @@ const IndexPage = () => {
       return <>
         <div className={styles.inputs}>
           <div className={styles.inputContent}>
-              <span className={styles.inputWrapper}>
-                <span className={styles.inputPrefix}>📜X:</span>
-                <input className={styles.input} type="text"/>
+              <span className={styles.inputWrapper + ` ${!canMint && styles.inputDisabled}`}>
+                <span className={styles.inputPrefix + ` ${!canMint && styles.inputDisabled}`}>📜X:</span>
+                <input disabled={!canMint} className={styles.input + ` ${!canMint && styles.inputDisabled}`} type="text"/>
               </span>
           </div>
           <div className={styles.inputContent}>
-              <span className={styles.inputWrapper}>
-                <span className={styles.inputPrefix}>📜Y:</span>
-                <input className={styles.input} type="text"/>
+              <span className={styles.inputWrapper + ` ${!canMint && styles.inputDisabled}`}>
+                <span className={styles.inputPrefix + ` ${!canMint && styles.inputDisabled}`}>📜Y:</span>
+                <input disabled={!canMint} className={styles.input + ` ${!canMint && styles.inputDisabled}`} type="text"/>
               </span>
           </div>
         </div>
         <div className={styles.button}>
-          <a><div>Mint</div></a>
+          <a className={`${!canMint && styles.buttonDisabled}`}>
+            <div className={`${!canMint && styles.buttonDisabled}`}>Mint</div>
+          </a>
         </div>
       </>
     }
@@ -129,7 +142,45 @@ const IndexPage = () => {
         <div className={styles.countDownText}>{diff.seconds()}</div>
       </div>
     </div>
-  }, [currentMoment])
+  }, [currentMoment, canMint])
+
+  const inviteDom = React.useMemo(() => {
+    if (BeginMintDatetime.isSameOrBefore(currentMoment)) {
+      return <>
+        <div className={styles.mintText}>
+          <div className={styles.mintLine} />
+          <div className={styles.mintTitle}>INVITE</div>
+          <div className={styles.mintLine} />
+        </div>
+        <div className={styles.inputs}>
+          <div className={styles.inputContent}>
+              <span className={styles.inputWrapper + ` ${!canInvite && styles.inputDisabled}`}>
+                <span className={styles.inputPrefix + ` ${!canInvite && styles.inputDisabled}`}>📜X:</span>
+                <input disabled={!canInvite} className={styles.input + ` ${!canInvite && styles.inputDisabled}`} type="text"/>
+              </span>
+          </div>
+          <div className={styles.inputContent}>
+              <span className={styles.inputWrapper + ` ${!canInvite && styles.inputDisabled}`}>
+                <span className={styles.inputPrefix + ` ${!canInvite && styles.inputDisabled}`}>📜Y:</span>
+                <input disabled={!canInvite} className={styles.input + ` ${!canInvite && styles.inputDisabled}`} type="text"/>
+              </span>
+          </div>
+        </div>
+        <div className={styles.inviteAddressInput}>
+          <div className={styles.inviteAddressInputContent}>
+              <span className={styles.inviteAddressInputWrapper + ` ${!canInvite && styles.inputDisabled}`}>
+                <span className={styles.inputPrefix + ` ${!canInvite && styles.inputDisabled}`}>📜Give to address:</span>
+                <input disabled={!canInvite} className={styles.input + ` ${!canInvite && styles.inputDisabled}`} type="text"/>
+              </span>
+          </div>
+        </div>
+        <div className={styles.button}>
+          <a className={`${!canInvite && styles.buttonDisabled}`}><div className={`${!canInvite && styles.buttonDisabled}`}>Invite</div></a>
+        </div>
+      </>
+    }
+    return <></>
+  }, [currentMoment, canInvite])
 
   return (
     <>
@@ -147,7 +198,7 @@ const IndexPage = () => {
               A person who has obtained 'land' is now PEOPLE<br/>
               A PEOPLE is allowed to invite at most two other persons<br/>
               To invite a person you can mint land and provide that to him/her<br/>
-              The cost to mint for invitations is ？？？<br/>
+              The cost to mint for invitations is {BeginMintDatetime.isSameOrBefore(currentMoment) ? `0.01ETH` : `？？？`}<br/>
               mint for Invitation can only choose outside the green area
             </p>
             <div><img className={styles.landImg} src={Land} alt="land"/></div>
@@ -177,6 +228,7 @@ const IndexPage = () => {
           </div>
           {mintText}
           {mintDom}
+          {inviteDom}
           <p className={styles.end}>
             Available via contract only. Not audited. Mint at your own risk. <br/>
             For any questions about invitations join the discord server, or <a href="" style={{color: "#625FF6"}}>view the contract</a>
