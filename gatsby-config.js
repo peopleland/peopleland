@@ -1,6 +1,6 @@
 module.exports = {
   siteMetadata: {
-    siteUrl: "https://xxx",
+    siteUrl: "https://peopleland.icpdao.co",
     title: "PEOPLE LAND",
   },
   plugins: [{

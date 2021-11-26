@@ -36,7 +36,6 @@
   display: inline-block;
 }
 
-
 @media (max-width: 750px) {
   .connect {
     display: none;

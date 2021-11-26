@@ -17,6 +17,10 @@ export class Contract {
     return await this.contract.givedLand(address);
   }
 
+  async getMintLandCount(address: string) {
+    return await this.contract.mintLandCount(address);
+  }
+
   async mintToSelf() {}
 
 }
