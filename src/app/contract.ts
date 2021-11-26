@@ -21,6 +21,20 @@ export class Contract {
     return await this.contract.mintLandCount(address);
   }
 
-  async mintToSelf() {}
+  async getPrice() {
+    return await this.contract.PRICE()
+  }
+
+  async mintToSelf(x: string, y: string, signInfo: any) {
+    const signer = this.metamaskProvider.getSigner();
+    const contractWithSigner = this.contract.connect(signer);
+    return await contractWithSigner.mintToSelf(x, y, signInfo.hash, signInfo.v, signInfo.r, signInfo.s)
+  }
+
+  async mintAndGiveTo(x: string, y: string, givedAddress: string) {
+    const signer = this.metamaskProvider.getSigner();
+    const contractWithSigner = this.contract.connect(signer);
+    return await contractWithSigner.mintAndGiveTo(x, y, givedAddress, {value: this.getPrice()})
+  }
 
 }
