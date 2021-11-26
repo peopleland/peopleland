@@ -6,6 +6,7 @@ import Land from "../assets/land.png"
 import detectEthereumProvider from "@metamask/detect-provider";
 import {Contract} from "../app/contract";
 import prodWhiteAddress from "../assets/prod_address_sign_info.json";
+import testWhiteAddress from "../assets/test_address_sign_info.json";
 import moment from "moment";
 import {BeginMintDatetime} from "../utils/global";
 
@@ -17,6 +18,10 @@ const IndexPage = () => {
   const [landCount, setLandCount] = React.useState<number>(0);
   const [currentMoment, setCurrentMoment] = React.useState(moment());
   const [inWhiteList, setInWhiteList] = React.useState(false);
+
+  const whiteAddress = React.useMemo(() => {
+    return process.env["GATSBY_RUN_ENV "] === "DEV" ? testWhiteAddress : prodWhiteAddress
+  }, [])
 
   React.useEffect(() => {
     setInterval(() => {
@@ -68,12 +73,10 @@ const IndexPage = () => {
     })
   }, [accounts])
 
-  console.log(network, accounts)
-
   React.useEffect(() => {
     if (!accounts || accounts.length < 1) return
     const account = accounts[0]
-    setInWhiteList(!!prodWhiteAddress[account])
+    setInWhiteList(!!whiteAddress[account])
   }, [accounts])
 
   const canMint = React.useMemo(() => {
@@ -199,7 +202,7 @@ const IndexPage = () => {
               A PEOPLE is allowed to invite at most two other persons<br/>
               To invite a person you can mint land and provide that to him/her<br/>
               The cost to mint for invitations is {BeginMintDatetime.isSameOrBefore(currentMoment) ? `0.01ETH` : `？？？`}<br/>
-              mint for Invitation can only choose outside the green area
+              mint for Invitation can only choose outside the red area
             </p>
             <div><img className={styles.landImg} src={Land} alt="land"/></div>
             <p className={styles.subcontent}>
