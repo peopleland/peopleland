@@ -19,8 +19,21 @@ const IndexPage = () => {
   const [currentMoment, setCurrentMoment] = React.useState(moment());
   const [inWhiteList, setInWhiteList] = React.useState(false);
 
+  const [invitePrice, setInvitePrice] = React.useState();
+
+  const [mintX, setMintX] = React.useState("");
+  const [mintY, setMintY] = React.useState("");
+  const [inviteX, setInviteX] = React.useState("");
+  const [inviteY, setInviteY] = React.useState("");
+  const [inviteAddress, setInviteAddress] = React.useState("");
+
+  const handleChangeInput = React.useCallback((e, setFunc) => {
+    const v = e.target.value
+    setFunc(v.replace(/[^0-9-]/ig,""))
+  }, [])
+
   const whiteAddress = React.useMemo(() => {
-    return process.env["GATSBY_RUN_ENV "] === "DEV" ? testWhiteAddress : prodWhiteAddress
+    return process.env["GATSBY_RUN_ENV"] === "DEV" ? testWhiteAddress : prodWhiteAddress
   }, [])
 
   React.useEffect(() => {
@@ -65,19 +78,22 @@ const IndexPage = () => {
     })
   }, [metamaskProvider])
 
-  React.useEffect(() => {
-    if (!accounts || accounts.length < 1 || !contract) return
-    const account = accounts[0]
-    contract.getGivedLand(account).then((ret) => {
-      setIsGived(ret)
-    })
+  const account = React.useMemo(() => {
+    if (accounts && accounts.length > 0) return accounts[0]
+    return null
   }, [accounts])
 
   React.useEffect(() => {
-    if (!accounts || accounts.length < 1) return
-    const account = accounts[0]
+    if (!contract || !account) return
+    contract.getGivedLand(account).then((ret) => {
+      setIsGived(ret.isGived)
+    })
+  }, [account])
+
+  React.useEffect(() => {
+    if (!account) return
     setInWhiteList(!!whiteAddress[account])
-  }, [accounts])
+  }, [account])
 
   const canMint = React.useMemo(() => {
     return !isGived && inWhiteList;
@@ -101,6 +117,27 @@ const IndexPage = () => {
     return <p className={styles.mintRemindTitle}>There is still time before the MINT starts...</p>
   }, [currentMoment])
 
+  const handleMint = React.useCallback(() => {
+    if (!contract) return
+    contract.mintToSelf(mintX, mintY, whiteAddress[account]).then(() => {
+      setMintX("")
+      setMintY("")
+    }).catch((e) => {
+      console.log(e)
+    })
+  }, [contract, mintX, mintY, account, whiteAddress])
+
+  const handleInvite = React.useCallback(() => {
+    if (!contract) return
+    contract.mintAndGiveTo(inviteX, inviteY, inviteAddress).then(() => {
+      setInviteX("")
+      setInviteY("")
+      setInviteAddress("")
+    }).catch((e) => {
+      console.log(e)
+    })
+  }, [contract, inviteY, inviteX, inviteAddress])
+
   const mintDom = React.useMemo(() => {
     if (BeginMintDatetime.isSameOrBefore(currentMoment)) {
       return <>
@@ -108,18 +145,27 @@ const IndexPage = () => {
           <div className={styles.inputContent}>
               <span className={styles.inputWrapper + ` ${!canMint && styles.inputDisabled}`}>
                 <span className={styles.inputPrefix + ` ${!canMint && styles.inputDisabled}`}>📜X:</span>
-                <input disabled={!canMint} className={styles.input + ` ${!canMint && styles.inputDisabled}`} type="text"/>
+                <input
+                  disabled={!canMint}
+                  className={styles.input + ` ${!canMint && styles.inputDisabled}`}
+                  type="text"
+                  value={mintX}
+                  onChange={e => handleChangeInput(e, setMintX)}
+                />
               </span>
           </div>
           <div className={styles.inputContent}>
               <span className={styles.inputWrapper + ` ${!canMint && styles.inputDisabled}`}>
                 <span className={styles.inputPrefix + ` ${!canMint && styles.inputDisabled}`}>📜Y:</span>
-                <input disabled={!canMint} className={styles.input + ` ${!canMint && styles.inputDisabled}`} type="text"/>
+                <input disabled={!canMint} className={styles.input + ` ${!canMint && styles.inputDisabled}`}
+                       value={mintY}
+                       onChange={e => handleChangeInput(e, setMintY)}
+                       type="text"/>
               </span>
           </div>
         </div>
         <div className={styles.button}>
-          <a className={`${!canMint && styles.buttonDisabled}`}>
+          <a className={`${!canMint && styles.buttonDisabled}`} onClick={handleMint}>
             <div className={`${!canMint && styles.buttonDisabled}`}>Mint</div>
           </a>
         </div>
@@ -145,7 +191,7 @@ const IndexPage = () => {
         <div className={styles.countDownText}>{diff.seconds()}</div>
       </div>
     </div>
-  }, [currentMoment, canMint])
+  }, [currentMoment, canMint, handleChangeInput, mintX, mintY, handleMint])
 
   const inviteDom = React.useMemo(() => {
     if (BeginMintDatetime.isSameOrBefore(currentMoment)) {
@@ -159,13 +205,19 @@ const IndexPage = () => {
           <div className={styles.inputContent}>
               <span className={styles.inputWrapper + ` ${!canInvite && styles.inputDisabled}`}>
                 <span className={styles.inputPrefix + ` ${!canInvite && styles.inputDisabled}`}>📜X:</span>
-                <input disabled={!canInvite} className={styles.input + ` ${!canInvite && styles.inputDisabled}`} type="text"/>
+                <input disabled={!canInvite} className={styles.input + ` ${!canInvite && styles.inputDisabled}`}
+                       value={inviteX}
+                       onChange={e => handleChangeInput(e, setInviteX)}
+                       type="text"/>
               </span>
           </div>
           <div className={styles.inputContent}>
               <span className={styles.inputWrapper + ` ${!canInvite && styles.inputDisabled}`}>
                 <span className={styles.inputPrefix + ` ${!canInvite && styles.inputDisabled}`}>📜Y:</span>
-                <input disabled={!canInvite} className={styles.input + ` ${!canInvite && styles.inputDisabled}`} type="text"/>
+                <input disabled={!canInvite} className={styles.input + ` ${!canInvite && styles.inputDisabled}`}
+                       value={inviteY}
+                       onChange={e => handleChangeInput(e, setInviteY)}
+                       type="text"/>
               </span>
           </div>
         </div>
@@ -173,17 +225,22 @@ const IndexPage = () => {
           <div className={styles.inviteAddressInputContent}>
               <span className={styles.inviteAddressInputWrapper + ` ${!canInvite && styles.inputDisabled}`}>
                 <span className={styles.inputPrefix + ` ${!canInvite && styles.inputDisabled}`}>📜Give to address:</span>
-                <input disabled={!canInvite} className={styles.input + ` ${!canInvite && styles.inputDisabled}`} type="text"/>
+                <input disabled={!canInvite} className={styles.input + ` ${!canInvite && styles.inputDisabled}`}
+                       value={inviteAddress}
+                       onChange={e => setInviteAddress(e.target.value)}
+                       type="text"/>
               </span>
           </div>
         </div>
         <div className={styles.button}>
-          <a className={`${!canInvite && styles.buttonDisabled}`}><div className={`${!canInvite && styles.buttonDisabled}`}>Invite</div></a>
+          <a className={`${!canInvite && styles.buttonDisabled}`} onClick={handleInvite}>
+            <div className={`${!canInvite && styles.buttonDisabled}`}>Invite</div>
+          </a>
         </div>
       </>
     }
     return <></>
-  }, [currentMoment, canInvite])
+  }, [currentMoment, canInvite, inviteX, inviteY, inviteAddress, handleInvite])
 
   return (
     <>
