@@ -1,7 +1,10 @@
 module.exports = {
   siteMetadata: {
-    siteUrl: "https://www.yourdomain.tld",
-    title: "peopleland",
+    siteUrl: "https://xxx",
+    title: "PEOPLE LAND",
   },
-  plugins: [],
+  plugins: [{
+    resolve: "gatsby-plugin-typescript",
+    options: {isTSX: true, allExtensions: true}
+  }],
 };

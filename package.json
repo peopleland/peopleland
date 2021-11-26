@@ -15,8 +15,14 @@
     "clean": "gatsby clean"
   },
   "dependencies": {
+    "ethers": "^5.5.1",
     "gatsby": "^4.2.0",
+    "gatsby-plugin-typescript": "^4.2.0",
+    "moment": "^2.29.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1"
+  },
+  "devDependencies": {
+    "@metamask/detect-provider": "^1.2.0"
   }
 }

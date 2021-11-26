@@ -1,0 +1,196 @@
+.title {
+  font-weight: bold;
+  font-size: 3.428rem;
+  text-align: center;
+  margin-top: 60px;
+}
+
+.congratulation {
+  font-weight: bold;
+  font-size: 2.428rem;
+  text-align: center;
+  margin-top: 60px;
+  line-height: 52px;
+  max-width: 850px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.scroll {
+  font-weight: bold;
+  font-size: 3.428rem;
+  text-align: center;
+  margin-top: 65px;
+  letter-spacing: 0.2em;
+}
+
+.desc {
+  font-weight: bold;
+  font-size: 1.70rem;
+  text-align: center;
+}
+
+.content {
+  max-width: 985px;
+  text-align: center;
+  margin-top: 46px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.subtitle {
+  margin-top: 50px;
+  font-size: 1.28rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.subcontent {
+  line-height: 24px;
+}
+
+.guideImg {
+  height: 182px;
+  width: 384px;
+  text-align: center;
+}
+
+.mintText {
+  margin-top: 55px;
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  text-align: center;
+  width: 100%;
+}
+
+.mintLine {
+  height: 1px;
+  width: 30%;
+  background: #44392B;
+  vertical-align: center;
+  margin-top: 11px;
+  line-height: 24px;
+}
+
+.mintTitle {
+  margin-left: 81px;
+  margin-right: 81px;
+  vertical-align: center;
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: 0.2em;
+}
+
+.inputs {
+  margin-top: 68px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.inputWrapper {
+  position: relative;
+  width: 184px;
+  min-width: 0;
+  padding: 4px 11px;
+  color: #000000d9;
+  font-size: 14px;
+  line-height: 1.5715;
+  background-color: #CFAF8B;
+  background-image: none;
+  transition: all .3s;
+  display: inline-flex;
+}
+
+.inputContent {
+  flex: 0 0 184px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+@media (max-width: 512px) {
+  .inputs {
+    flex-direction: column;
+  }
+  .inputContent {
+    flex: auto;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.inputPrefix {
+  display: flex;
+  flex: none;
+  align-items: center;
+  font-size: 14px;
+  line-height: 24px;
+  letter-spacing: 0.2em;
+  color: #A5742A;
+}
+
+.input {
+  padding: 0;
+  border: none;
+  outline: none;
+  background-color: #CFAF8B;
+}
+
+.button {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+}
+
+.button > a {
+  background: #625FF6;
+  border-radius: 4px;
+  width: 184px;
+  height: 32px;
+}
+
+.button > a > div {
+  line-height: 22px;
+  margin-top: 5px;
+  text-align: center;
+  color: #DBDBDB;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.end {
+  margin-top: 30px;
+  margin-bottom: 125px;
+  font-size: 12px;
+  line-height: 24px;
+  text-align: center;
+}
+
+.countDownContent {
+  margin-top: 68px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.countDown {
+  background: #635A5A;
+  border-radius: 10px;
+  width: 167px;
+  height: 216px;
+  margin-right: 32px;
+}
+
+.countDownTitle {
+  padding: 31px 19px;
+}
+
+.countDownText {
+  text-align: center;
+  font-size: 64px;
+  font-weight: bold;
+}
