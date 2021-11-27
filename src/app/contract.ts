@@ -37,4 +37,10 @@ export class Contract {
     return await contractWithSigner.mintAndGiveTo(x, y, givedAddress, {value: this.getPrice()})
   }
 
+  async mintAndGiveToWithSlogan(x: string, y: string, givedAddress: string, slogan: string) {
+    const signer = this.metamaskProvider.getSigner();
+    const contractWithSigner = this.contract.connect(signer);
+    return await contractWithSigner.mintAndGiveToWithSlogan(x, y, givedAddress, slogan, {value: this.getPrice()})
+  }
+
 }

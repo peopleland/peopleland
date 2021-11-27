@@ -21,7 +21,7 @@ export default ({connectWallet, accounts, network}) => {
   }, [accounts, network, connectWallet])
   return <header>
     <div className={styles.links}>
-      <div><a href="">Opensea</a></div>
+      <div><a href="https://opensea.io/collection/people-land" target="_blank">Opensea</a></div>
       <div className={styles.linkDiscord}><a href="https://discord.gg/KNUBFsxxS3" target="_blank">Discord</a></div>
     </div>
     {rightHeader}
