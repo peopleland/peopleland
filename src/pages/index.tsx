@@ -299,6 +299,7 @@ const IndexPage = () => {
               A PEOPLE is allowed to invite at most two other persons<br/>
               To invite a person you can mint land and provide that to him/her<br/>
               The cost to mint for invitations is {BeginMintDatetime.isSameOrBefore(currentMoment) ? `0.66ETH(average donation amount)` : `？？？`}<br/>
+              25 plots of land around the central 0 point, reserved by the builder<br/>
               mint for Invitation can only choose outside the red area
             </p>
             <div><img className={styles.landImg} src={Land} alt="land"/></div>
@@ -331,7 +332,7 @@ const IndexPage = () => {
           {inviteDom}
           <p className={styles.end}>
             Available via contract only. Not audited. Mint at your own risk. <br/>
-            For any questions about invitations join the discord server, or <a href="" style={{color: "#625FF6"}}>view the contract</a>
+            For any questions about invitations join the discord server, or <a href="https://etherscan.io/address/0xD1d30B80C5EFB9145782634fe0F9cbeD5D24ef3b" target="_blank" style={{color: "#625FF6"}}>view the contract</a>
           </p>
           <p className={styles.tips}>
             This page is open source in <a href="https://github.com/icpdao/peopleland" target="_blank" style={{color: "#625FF6"}}>GitHub</a>. You can modify and deploy it at will.
