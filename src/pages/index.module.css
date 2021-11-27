@@ -193,7 +193,15 @@
 
 .end {
   margin-top: 70px;
-  margin-bottom: 100px;
+  margin-bottom: 70px;
+  font-size: 12px;
+  line-height: 24px;
+  text-align: center;
+}
+
+.tips {
+  margin-top: 30px;
+  margin-bottom: 30px;
   font-size: 12px;
   line-height: 24px;
   text-align: center;

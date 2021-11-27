@@ -293,6 +293,9 @@ const IndexPage = () => {
             Available via contract only. Not audited. Mint at your own risk. <br/>
             For any questions about invitations join the discord server, or <a href="" style={{color: "#625FF6"}}>view the contract</a>
           </p>
+          <p className={styles.tips}>
+            This page is open source in <a href="https://github.com/icpdao/peopleland" target="_blank" style={{color: "#625FF6"}}>GitHub</a>. You can modify and deploy it at will.
+          </p>
         </main>
       </div>
     </>
