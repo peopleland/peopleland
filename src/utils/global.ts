@@ -10,5 +10,5 @@ export const EthereumNetwork = {
 
 export const ContractAddress = "0xac6faA8065c6aC2FbF42ac21553F64c00181BD40"
 
-// export const BeginMintDatetime = moment.unix(1637933358)
-export const BeginMintDatetime = moment.unix(1638064800)
+export const BeginMintDatetime = moment.unix(1637933358)
+// export const BeginMintDatetime = moment.unix(1638064800)
