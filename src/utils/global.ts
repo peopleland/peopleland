@@ -8,7 +8,7 @@ export const EthereumNetwork = {
   '0x2a': 'kovan',
 };
 
-export const ContractAddress = "0xac6faA8065c6aC2FbF42ac21553F64c00181BD40"
+export const ContractAddress = "0xD1d30B80C5EFB9145782634fe0F9cbeD5D24ef3b"
 
 export const BeginMintDatetime = moment.unix(1637933358)
 // export const BeginMintDatetime = moment.unix(1638064800)
