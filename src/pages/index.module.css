@@ -70,10 +70,22 @@
   width: 100%;
 }
 
+.sloganImg {
+  margin-top: 3rem;
+  text-align: center;
+}
+
+.sloganDesc {
+  margin-top: 2.5rem;
+  text-align: center;
+  font-size: 14px;
+  line-height: 20px;
+}
+
 .mintLine {
   height: 1px;
   width: 30%;
-  background: #44392B;
+  background: #6B6E80;
   vertical-align: center;
   margin-top: 11px;
   line-height: 24px;
@@ -94,6 +106,23 @@
   line-height: 24px;
   letter-spacing: 0.2em;
   text-align: center;
+}
+
+.mintDesc {
+  margin-top: 4.2rem;
+  text-align: center;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.inviteDesc {
+  margin-top: 4.2rem;
+  text-align: center;
+  font-size: 14px;
+  line-height: 20px;
+  max-width: 984px;
+  margin-right: auto;
+  margin-left: auto;
 }
 
 .inputs {
@@ -168,29 +197,6 @@
   background-color: #CFAF8B;
 }
 
-.button {
-  margin-top: 30px;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
-
-.button > a {
-  background: #625FF6;
-  border-radius: 4px;
-  width: 184px;
-  height: 32px;
-}
-
-.button > a > div {
-  line-height: 22px;
-  margin-top: 5px;
-  text-align: center;
-  color: #DBDBDB;
-  font-weight: bold;
-  cursor: pointer;
-}
-
 .end {
   margin-top: 70px;
   margin-bottom: 70px;
@@ -199,13 +205,6 @@
   text-align: center;
 }
 
-.tips {
-  margin-top: 30px;
-  margin-bottom: 30px;
-  font-size: 12px;
-  line-height: 24px;
-  text-align: center;
-}
 
 .countDownContent {
   margin-top: 68px;
@@ -239,70 +238,6 @@
   box-shadow: none;
   cursor: not-allowed;
   opacity: 1;
-}
-
-.buttonDisabled {
-  color: #00000040;
-  border-color: #d9d9d9;
-  background: #f5f5f5 !important;
-  text-shadow: none;
-  box-shadow: none;
-  cursor: not-allowed !important;
-}
-
-.loadingIcon {
-  transition: all .3s cubic-bezier(.645,.045,.355,1);
-  display: inline-block;
-  box-sizing: border-box;
-}
-
-.iconLoading {
-  padding-right: 8px;
-  animation: none;
-  transition: margin-left .3s cubic-bezier(.645,.045,.355,1);
-  display: inline-block;
-  color: inherit;
-  font-style: normal;
-  line-height: 0;
-  text-align: center;
-  text-transform: none;
-  vertical-align: -0.125em;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-}
-
-.iconLoading > svg {
-  -webkit-animation: loadingCircle 1s infinite linear;
-  animation: loadingCircle 1s infinite linear;
-  display: inline-block;
-  overflow: hidden;
-  line-height: 1;
-  box-sizing: border-box;
-}
-
-.buttonLoading {
-  position: relative;
-  cursor: default;
-}
-
-@-moz-keyframes loadingCircle {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-@-webkit-keyframes loadingCircle {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-@-o-keyframes loadingCircle {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-@keyframes loadingCircle {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
 }
 
 @media (max-width: 750px) {

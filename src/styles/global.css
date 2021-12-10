@@ -1,28 +1,19 @@
 html {
   font-family: Helvetica -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  background: linear-gradient(180deg, #3e3e3e 0%, #161616 100%);
+  height: 100%;
 }
 
 body {
-  margin: unset;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  height: 100%;
+  min-height: 100vh;
+  word-wrap: break-word;
+  overflow-x: hidden;
 }
 
 a {
   text-decoration: none;
   color: #DBDBDB;
-}
-
-header {
-  width: 100%;
-  height: 4.2rem;
-  position: absolute;
-  top: 0;
-  left: 0;
-  background: #171717;
-  color: #DBDBDB;
-}
-
-main {
-  color: #FFFFFF;
-  padding-top: 60px;
 }
