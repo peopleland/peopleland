@@ -15,14 +15,27 @@
     "clean": "gatsby clean"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^1.6.2",
+    "@types/numeral": "^2.0.2",
+    "@web3-react/core": "^6.1.9",
+    "@web3-react/injected-connector": "^6.0.7",
+    "buffer": "^6.0.3",
     "ethers": "^5.5.1",
     "gatsby": "^4.2.0",
     "gatsby-plugin-typescript": "^4.2.0",
+    "keccak256": "^1.0.3",
+    "merkletreejs": "^0.2.26",
     "moment": "^2.29.1",
+    "numeral": "^2.0.6",
     "react": "^17.0.1",
-    "react-dom": "^17.0.1"
+    "react-dom": "^17.0.1",
+    "react-redux": "^7.2.6",
+    "redux": "^4.1.2",
+    "stream-browserify": "^3.0.0"
   },
   "devDependencies": {
-    "@metamask/detect-provider": "^1.2.0"
+    "@metamask/detect-provider": "^1.2.0",
+    "@umijs/fabric": "^2.8.1",
+    "eslint": "^7.32.0"
   }
 }

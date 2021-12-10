@@ -1,10 +1,12 @@
 module.exports = {
   siteMetadata: {
-    siteUrl: "https://peopleland.icpdao.co",
-    title: "PEOPLE LAND",
+    siteUrl: "https://peopleland.space",
+    title: "PEOPLELAND",
   },
-  plugins: [{
-    resolve: "gatsby-plugin-typescript",
-    options: {isTSX: true, allExtensions: true}
-  }],
+  plugins: [
+    {
+      resolve: "gatsby-plugin-typescript",
+      options: {isTSX: true, allExtensions: true}
+    }
+  ],
 };

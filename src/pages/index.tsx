@@ -1,31 +1,55 @@
 import * as React from "react"
-import Header from "../components/header"
 import * as styles from "./index.module.css"
 import Guide from "../assets/guide.jpeg"
 import Land from "../assets/land.png"
-import detectEthereumProvider from "@metamask/detect-provider";
-import {Contract} from "../app/contract";
-import prodWhiteAddress from "../assets/prod_address_sign_info.json";
-import testWhiteAddress from "../assets/test_address_sign_info.json";
+import {MintContract} from "../app/mintContract";
+import prodWhiteAddress from "../assets/json/prod_address_sign_info.json";
+import testWhiteAddress from "../assets/json/test_address_sign_info.json";
+import sloganDescImg from "../assets/slogan_desc.png";
 import moment from "moment";
 import {BeginMintDatetime} from "../utils/global";
-
-const loadingDom = <span className={styles.loadingIcon}>
-  <span role="img" aria-label="loading" className={styles.iconLoading}>
-    <svg viewBox="0 0 1024 1024" focusable="false" data-icon="loading" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M988 548c-19.9 0-36-16.1-36-36 0-59.4-11.6-117-34.6-171.3a440.45 440.45 0 00-94.3-139.9 437.71 437.71 0 00-139.9-94.3C629 83.6 571.4 72 512 72c-19.9 0-36-16.1-36-36s16.1-36 36-36c69.1 0 136.2 13.5 199.3 40.3C772.3 66 827 103 874 150c47 47 83.9 101.8 109.7 162.7 26.7 63.1 40.2 130.2 40.2 199.3.1 19.9-16 36-35.9 36z"></path></svg>
-  </span>
-</span>
+import Page from "../components/page";
+import Button from "../components/button";
+import {useMemo} from "react";
+import detectEthereumProvider from "@metamask/detect-provider";
+import {ethers} from "ethers";
+// import {useWeb3React} from "@web3-react/core";
 
 const IndexPage = () => {
+  // const { library, account, chainId } = useWeb3React();
   const [metamaskProvider, setMetamaskProvider] = React.useState(null);
-  const [network, setNetwork] = React.useState<string>(null);
-  const [accounts, setAccounts] = React.useState<string[]>([]);
+  const [chainId, setChainId] = React.useState<number>(null);
+  const [account, setAccount] = React.useState<string>();
+
+  React.useEffect(() => {
+    detectEthereumProvider({ mustBeMetaMask: true, timeout: 5000 }).then((v: any) => {
+      if (!v) return
+      setMetamaskProvider(v)
+    })
+  }, [])
+
+  const connectMetamask = React.useCallback(() => {
+    if (!metamaskProvider) {
+      window.location.href = 'https://metamask.io/'
+      return
+    }
+    metamaskProvider.request({ method: 'eth_chainId' }).then((cid: string) => {
+      setChainId(parseInt(cid, 16))
+    })
+    metamaskProvider.request({ method: 'eth_requestAccounts' }).then((accs: any) => {
+      setAccount(accs[0])
+    })
+  }, [metamaskProvider])
+
+  const library = React.useMemo(() => {
+    if (!metamaskProvider) return null
+    return new ethers.providers.Web3Provider(metamaskProvider)
+  }, [metamaskProvider])
+
   const [isGived, setIsGived] = React.useState<boolean>(false);
   const [landCount, setLandCount] = React.useState<number>(0);
   const [currentMoment, setCurrentMoment] = React.useState(moment());
   const [inWhiteList, setInWhiteList] = React.useState(false);
-
-  const [invitePrice, setInvitePrice] = React.useState();
 
   const [mintX, setMintX] = React.useState("");
   const [mintY, setMintY] = React.useState("");
@@ -33,6 +57,8 @@ const IndexPage = () => {
   const [inviteY, setInviteY] = React.useState("");
   const [inviteAddress, setInviteAddress] = React.useState("");
   const [inviteSlogan, setInviteSlogan] = React.useState("");
+
+  const [customSlogan, setCustomSlogan] = React.useState("");
 
   const [loadingMint, setLoadingMint] = React.useState<boolean>(false);
   const [loadingInvite, setLoadingInvite] = React.useState<boolean>(false);
@@ -43,7 +69,7 @@ const IndexPage = () => {
   }, [])
 
   const whiteAddress = React.useMemo(() => {
-    return process.env["GATSBY_RUN_ENV"] === "DEV" ? testWhiteAddress : prodWhiteAddress
+    return process.env.GATSBY_RUN_ENV === "DEV" ? testWhiteAddress : prodWhiteAddress
   }, [])
 
   React.useEffect(() => {
@@ -52,69 +78,34 @@ const IndexPage = () => {
     }, 1000)
   }, [])
 
-  React.useEffect(() => {
-    detectEthereumProvider({ mustBeMetaMask: true, timeout: 5000 }).then((v: any) => {
-      if (!v) return
-      setMetamaskProvider(v)
-    })
-  }, [])
-
   const contract = React.useMemo(() => {
-    if (!network || !metamaskProvider) return null
-    return new Contract(network, metamaskProvider)
-  },[network, metamaskProvider])
-
-  React.useEffect(() => {
-    if (metamaskProvider) {
-      metamaskProvider.on('accountsChanged', (acs: string[]) => {
-        setAccounts(acs);
-      });
-      metamaskProvider.on('chainChanged', (cid: string) => {
-        setNetwork(cid);
-      });
-    }
-  }, [metamaskProvider])
-
-  const connectMetamask = React.useCallback(() => {
-    if (!metamaskProvider) {
-      window.location.href = 'https://metamask.io/'
-      return
-    }
-    metamaskProvider.request({ method: 'eth_chainId' }).then((chainId: any) => {
-      setNetwork(chainId)
-    })
-    metamaskProvider.request({ method: 'eth_requestAccounts' }).then((accs: any) => {
-      setAccounts(accs)
-    })
-  }, [metamaskProvider])
-
-  const account = React.useMemo(() => {
-    if (accounts && accounts.length > 0) return accounts[0].toLowerCase()
-    return null
-  }, [accounts])
+    if (!chainId || !library) return null
+    return new MintContract(chainId, library)
+  },[chainId, library])
 
   React.useEffect(() => {
     if (!contract || !account) return
     contract.getGivedLand(account).then((ret) => {
       setIsGived(ret.isGived)
     })
-  }, [account, loadingMint])
+  }, [account, contract, loadingMint])
 
   React.useEffect(() => {
     if (!account) return
-    setInWhiteList(!!whiteAddress[account])
-  }, [account])
+    setInWhiteList(!!whiteAddress[account.toLowerCase()])
+  }, [account, whiteAddress])
 
   const canMint = React.useMemo(() => {
+    console.log({isGived, inWhiteList})
     return !isGived && inWhiteList;
   }, [isGived, inWhiteList])
 
   React.useEffect(() => {
-    if (!isGived || !accounts || accounts.length < 1) return
-    contract.getMintLandCount(accounts[0]).then((v) => {
+    if (!isGived || !account) return
+    contract.getMintLandCount(account).then((v) => {
       setLandCount(v)
     })
-  }, [isGived, accounts, contract, loadingInvite, loadingMint])
+  }, [isGived, account, contract, loadingInvite, loadingMint])
 
   const canInvite = React.useMemo(() => {
     return isGived && landCount < 2;
@@ -130,7 +121,7 @@ const IndexPage = () => {
   const handleMint = React.useCallback(() => {
     if (!contract) return
     setLoadingMint(true)
-    contract.mintToSelf(mintX, mintY, whiteAddress[account]).then((tx) => {
+    contract.mintToSelf(mintX, mintY, whiteAddress[account.toLowerCase()]).then((tx) => {
       setMintX("")
       setMintY("")
       tx.wait().then().catch().finally(() => setLoadingMint(false))
@@ -170,6 +161,12 @@ const IndexPage = () => {
   const mintDom = React.useMemo(() => {
     if (BeginMintDatetime.isSameOrBefore(currentMoment)) {
       return <>
+        <p className={styles.mintDesc}>
+          Link your Metamask wallet. <br/>
+          The system will recognize that you are an original donor.<br/>
+          The "free mint" button will be activated, enter the x & y axis that you want to mint, check your gas fee and it's done!<br/>
+          Note: Some coordinates have been minted, see here at <a href="https://opensea.io/collection/people-land" target="_blank" style={{color: "#625FF6"}}>Opensea</a>.
+        </p>
         <div className={styles.inputs}>
           <div className={styles.inputContent}>
               <span className={styles.inputWrapper + ` ${!canMint && styles.inputDisabled}`}>
@@ -193,11 +190,7 @@ const IndexPage = () => {
               </span>
           </div>
         </div>
-        <div className={styles.button}>
-          <a className={`${!canMint && styles.buttonDisabled}`} onClick={handleMint}>
-            <div className={`${!canMint && styles.buttonDisabled}` + ` ${loadingMint && styles.buttonLoading}`}>{loadingMint && loadingDom}Free Mint</div>
-          </a>
-        </div>
+        <Button disabled={!canMint} onClick={handleMint} loading={loadingMint}>Free Mint</Button>
       </>
     }
     const diff = moment.duration(BeginMintDatetime.diff(currentMoment, 'seconds'), 'seconds').locale("en")
@@ -230,6 +223,11 @@ const IndexPage = () => {
           <div className={styles.mintTitle}>INVITE</div>
           <div className={styles.mintLine} />
         </div>
+        <p className={styles.inviteDesc}>
+          You can only invite by owning PeopleLand. <br/>
+          Invitation cost is 0.66 ETH to mint. Enter the x & y axis that you want to mint, provide a slogan, ETH address of the neighbor you are inviting, check your gas fee and it's done!<br/>
+          Note: Once you have used both your invitations you will no longer be able to invite another PEOPLE to PeopleLand.
+        </p>
         <div className={styles.inputs}>
           <div className={styles.inputContent}>
               <span className={styles.inputWrapper + ` ${!canInvite && styles.inputDisabled}`}>
@@ -272,75 +270,93 @@ const IndexPage = () => {
               </span>
           </div>
         </div>
-        <div className={styles.button}>
-          <a className={`${!canInvite && styles.buttonDisabled}`} onClick={handleInvite}>
-            <div className={`${!canInvite && styles.buttonDisabled} ${loadingInvite && styles.buttonLoading}`}>{loadingInvite && loadingDom}Invite 0.66ETH</div>
-          </a>
-        </div>
+        <Button disabled={!canInvite} loading={loadingInvite} onClick={handleInvite}>Invite 0.66ETH</Button>
       </>
     }
     return <></>
-  }, [currentMoment, canInvite, inviteX, inviteY, inviteAddress, inviteSlogan, handleInvite, loadingInvite])
+  }, [currentMoment, canInvite, inviteX, inviteY, inviteAddress, inviteSlogan, handleInvite, loadingInvite, handleChangeInput])
 
-  return (
-    <>
-      <title>People Land</title>
-      <div>
-        <Header connectWallet={connectMetamask} accounts={accounts} network={network}/>
-        <main>
-          <p className={styles.title}>PEOPLELAND</p>
-          <p className={styles.scroll}>(📜,📜)</p>
-          <p className={styles.desc}>For the PEOPLE of ConstitutionDAO who made history</p>
-          <div className={styles.content}>
-            <p className={styles.subtitle}>Rules</p>
-            <p className={styles.subcontent}>
-              Donors are free to mint a piece of land with no fee <br/>
-              A person who has obtained 'land' is now PEOPLE<br/>
-              A PEOPLE is allowed to invite at most two other persons<br/>
-              To invite a person you can mint land and provide that to him/her<br/>
-              The cost to mint for invitations is {BeginMintDatetime.isSameOrBefore(currentMoment) ? `0.66ETH(average donation amount)` : `？？？`}<br/>
-              25 plots of land around the central 0 point, reserved by the builder<br/>
-              mint for Invitation can only choose outside the red area
-            </p>
-            <div><img className={styles.landImg} src={Land} alt="land"/></div>
-            <p className={styles.subcontent}>
-              Only one person can be the owner of a piece of land<br/>
-              Each person can only accept an invitation once
-            </p>
-            <p className={styles.subtitle}>Neighbors</p>
-            <p className={styles.subcontent}>
-              PEOPLELAND saves invitations and neighbor's relationships forever.<br/>
-              Getting an invitation is an honor and the value of land is determined by neighoring land, be careful to invite neighbors!
-            </p>
-            <p className={styles.subtitle}>Explaination</p>
-            <p className={styles.subcontent}>
-              Land is a space with (x,y) coordinates. The positive x is east and the negative is west, the positive y is north and the negative is south. Each value of x and y can only be a numerical whole number, there is no limit to the maximum possible range and every coordinate position represents an area of 100 x 100 square meters.
-            </p>
-            <p className={styles.subtitle}>What can we do?</p>
-            <p className={styles.subcontent}>Feel free to use PEOPLELAND in any way you want.</p>
-            <p className={styles.subtitle}>Update Image</p>
-            <p className={styles.subcontent}>Click the refresh button on your PEOPLELAND when on OpenSea to view the changes in your neighborhood!</p>
-            <div><img className={styles.guideImg} src={Guide} alt="guide opensea"/></div>
+  const sloganDom = React.useMemo(() => {
+    if (BeginMintDatetime.isSameOrBefore(currentMoment)) {
+      return <>
+        <div className={styles.mintText}>
+          <div className={styles.mintLine} />
+          <div className={styles.mintTitle}>SLOGAN</div>
+          <div className={styles.mintLine} />
+        </div>
+        <div className={styles.sloganImg}>
+          <img src={sloganDescImg} width="283px" height="134px" alt=""/>
+        </div>
+        <p className={styles.sloganDesc}>
+          You may change your slogan whenever you like. <br/>
+          What description would you like to provide for your slogan?
+        </p>
+        <div className={styles.inviteAddressInput}>
+          <div className={styles.inviteAddressInputContent}>
+              <span className={styles.inviteAddressInputWrapper + ` ${!canInvite && styles.inputDisabled}`}>
+                <span className={styles.inputPrefix + ` ${!canInvite && styles.inputDisabled}`}>📜Slogan:</span>
+                <input disabled={!canInvite} className={styles.input + ` ${!canInvite && styles.inputDisabled}`}
+                       value={customSlogan}
+                       onChange={e => setCustomSlogan(e.target.value)}
+                       type="text"/>
+              </span>
           </div>
-          <div className={styles.mintText}>
-            <div className={styles.mintLine} />
-            <div className={styles.mintTitle}>MINT</div>
-            <div className={styles.mintLine} />
-          </div>
-          {mintText}
-          {mintDom}
-          {inviteDom}
-          <p className={styles.end}>
-            Available via contract only. Not audited. Mint at your own risk. <br/>
-            For any questions about invitations join the discord server, or <a href="https://etherscan.io/address/0xD1d30B80C5EFB9145782634fe0F9cbeD5D24ef3b" target="_blank" style={{color: "#625FF6"}}>view the contract</a>
-          </p>
-          <p className={styles.tips}>
-            This page is open source in <a href="https://github.com/icpdao/peopleland" target="_blank" style={{color: "#625FF6"}}>GitHub</a>. You can modify and deploy it at will.
-          </p>
-        </main>
-      </div>
-    </>
-  )
+        </div>
+        <Button disabled={!canInvite} loading={loadingInvite} onClick={handleInvite}>Submit</Button>
+      </>
+    }
+    return <></>
+  }, [currentMoment, canInvite, customSlogan, loadingInvite, handleInvite])
+
+  return useMemo(() => <Page title="" chainId={chainId} account={account} connectMetamask={connectMetamask}>
+    <p className={styles.title}>PEOPLELAND</p>
+    <p className={styles.scroll}>(📜,📜)</p>
+    <p className={styles.desc}>For the PEOPLE of ConstitutionDAO who made history</p>
+    <div className={styles.content}>
+      <p className={styles.subtitle}>Rules</p>
+      <p className={styles.subcontent}>
+        Donors are free to mint a piece of land with no fee <br/>
+        A person who has obtained 'land' is now PEOPLE<br/>
+        A PEOPLE is allowed to invite at most two other persons<br/>
+        To invite a person you can mint land and provide that to him/her<br/>
+        The cost to mint for invitations is {BeginMintDatetime.isSameOrBefore(currentMoment) ? `0.66ETH(average donation amount)` : `？？？`}<br/>
+        25 plots of land around the central 0 point, reserved by the builder<br/>
+        mint for Invitation can only choose outside the red area
+      </p>
+      <div><img className={styles.landImg} src={Land} alt="land"/></div>
+      <p className={styles.subcontent}>
+        Only one person can be the owner of a piece of land<br/>
+        Each person can only accept an invitation once
+      </p>
+      <p className={styles.subtitle}>Neighbors</p>
+      <p className={styles.subcontent}>
+        PEOPLELAND saves invitations and neighbor's relationships forever.<br/>
+        Getting an invitation is an honor and the value of land is determined by neighoring land, be careful to invite neighbors!
+      </p>
+      <p className={styles.subtitle}>Explaination</p>
+      <p className={styles.subcontent}>
+        Land is a space with (x,y) coordinates. The positive x is east and the negative is west, the positive y is north and the negative is south. Each value of x and y can only be a numerical whole number, there is no limit to the maximum possible range and every coordinate position represents an area of 100 x 100 square meters.
+      </p>
+      <p className={styles.subtitle}>What can we do?</p>
+      <p className={styles.subcontent}>Feel free to use PEOPLELAND in any way you want.</p>
+      <p className={styles.subtitle}>Update Image</p>
+      <p className={styles.subcontent}>Click the refresh button on your PEOPLELAND when on OpenSea to view the changes in your neighborhood!</p>
+      <div><img className={styles.guideImg} src={Guide} alt="guide opensea"/></div>
+    </div>
+    <div className={styles.mintText}>
+      <div className={styles.mintLine} />
+      <div className={styles.mintTitle}>MINT</div>
+      <div className={styles.mintLine} />
+    </div>
+    {mintText}
+    {mintDom}
+    {inviteDom}
+    {/*{sloganDom}*/}
+    <p className={styles.end}>
+      Available via contract only. Not audited. Mint at your own risk. <br/>
+      For any questions about invitations join the discord server, or <a href="https://etherscan.io/address/0xD1d30B80C5EFB9145782634fe0F9cbeD5D24ef3b" target="_blank" style={{color: "#625FF6"}}>view the contract</a>
+    </p>
+  </Page>, [account, chainId, connectMetamask, currentMoment, inviteDom, mintDom, mintText])
 }
 
 export default IndexPage
