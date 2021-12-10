@@ -76,7 +76,7 @@ const AirdropPage = () => {
       {countDown}
       <p className={styles.end}>
         Available via contract only. Not audited. Mint at your own risk. <br/>
-        For rules on airdrops, please learn through proposal or view the contract.
+        For rules on airdrops, please learn through <a href="https://github.com/peopleland/discussion/discussions/16" target="_blank" style={{color: "#625FF6"}}>proposal</a> or view the <a href="https://ropsten.etherscan.io/address/0xD1d30B80C5EFB9145782634fe0F9cbeD5D24ef3b" target="_blank" style={{color: "#625FF6"}}>contract</a>.
       </p>
     </div>
   </Page>, [account, chainId, connectMetamask, countDown])
